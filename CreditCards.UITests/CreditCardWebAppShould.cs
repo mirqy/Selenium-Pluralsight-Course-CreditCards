@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Collections.ObjectModel;
 
 namespace CreditCards.UITests
 {
@@ -95,10 +96,10 @@ namespace CreditCards.UITests
                 driver.Navigate().GoToUrl(homeUrl);
                 DemoHelper.Pause();
 
-                IWebElement firstTableCell = driver.FindElement(By.TagName("td"));
-                string firstProduct = firstTableCell.Text;
+                ReadOnlyCollection<IWebElement> tableCells = driver.FindElements(By.TagName("td"));
                
-                Assert.AreEqual(firstProduct, "Easy Credit Card");
+                Assert.AreEqual(tableCells[0].Text, "Easy Credit Card");
+                Assert.AreEqual(tableCells[1].Text, "20% APR");
             }
         }        
     }

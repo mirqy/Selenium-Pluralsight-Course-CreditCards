@@ -112,5 +112,63 @@ namespace CreditCards.UITests
                 Assert.AreEqual(driver.Title, creditCardTitle);
             }
         }
+
+        [TestMethod]
+        public void BeSubmittedWhenValid()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(creditApplyUrl);
+
+                driver.FindElement(By.Id("FirstName")).SendKeys("Luna");
+                DemoHelper.Pause(1000);
+
+                driver.FindElement(By.Id("LastName")).SendKeys("Lovegood");
+                DemoHelper.Pause(1000);
+
+                driver.FindElement(By.Id("FrequentFlyerNumber")).SendKeys("123456-A");
+                DemoHelper.Pause(1000);
+
+                driver.FindElement(By.Id("Age")).SendKeys("18");
+                DemoHelper.Pause(1000);
+
+                driver.FindElement(By.Id("GrossAnnualIncome")).SendKeys("50000");
+                DemoHelper.Pause(1000);
+
+                driver.FindElement(By.Id("Single")).Click();
+                DemoHelper.Pause(1000);
+
+                IWebElement businessSourceSelectElement = driver.FindElement(By.Id("BusinessSource"));
+                SelectElement businessSource = new SelectElement(businessSourceSelectElement);
+                Assert.AreEqual(businessSource.SelectedOption.Text, "I'd Rather Not Say");
+                foreach(IWebElement option in businessSource.Options)
+                {
+                    Console.WriteLine($"Value: {option.GetAttribute("value")} Text: {option.Text}");
+                }
+
+                Assert.AreEqual(5, businessSource.Options.Count);
+                businessSource.SelectByValue("Email");
+                DemoHelper.Pause(1000);
+                businessSource.SelectByText("Internet Search");
+                DemoHelper.Pause(1000);
+                businessSource.SelectByIndex(4);
+                DemoHelper.Pause(1000);
+
+                driver.FindElement(By.Id("TermsAccepted")).Click();
+                DemoHelper.Pause(1000);
+
+                // driver.FindElement(By.Id("SubmitApplication")).Click();
+                driver.FindElement(By.Id("Single")).Submit();
+                DemoHelper.Pause(1000);
+
+                Assert.AreEqual("Application Complete - Credit Cards", driver.Title);
+                Assert.AreEqual("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
+                Assert.AreEqual("Luna Lovegood", driver.FindElement(By.Id("FullName")).Text);
+                Assert.AreNotEqual("", driver.FindElement(By.Id("ReferenceNumber")).Text);
+                Assert.AreEqual("18", driver.FindElement(By.Id("Age")).Text);
+                Assert.AreEqual("50000", driver.FindElement(By.Id("Income")).Text);
+                Assert.AreEqual("TV", driver.FindElement(By.Id("BusinessSource")).Text);
+            }
+        }
     }
 }
