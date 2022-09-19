@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace CreditCards.UITests
 {
@@ -39,8 +41,10 @@ namespace CreditCards.UITests
 
                 IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
                 carouselNext.Click();
-                DemoHelper.Pause(1000);
-                IWebElement applyLink = driver.FindElement(By.LinkText("Easy: Apply Now!"));
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1));
+                IWebElement applyLink = wait.Until((d) => d.FindElement(By.LinkText("Easy: Apply Now!")));
+
                 applyLink.Click();
 
                 DemoHelper.Pause();
