@@ -8,10 +8,8 @@ namespace CreditCards.UITests
     public class CreditCardApplicationShould
     {
         const string homeUrl = "http://localhost:44108/";
-        const string homeAboutUrl = "http://localhost:44108/Home/About";
         const string creditApplyUrl = "http://localhost:44108/Apply";
 
-        const string homeTitle = "Home Page - Credit Cards";
         const string creditCardTitle = "Credit Card Application - Credit Cards";
 
         [TestMethod]
@@ -72,6 +70,42 @@ namespace CreditCards.UITests
 
                 Assert.AreEqual(creditCardTitle, driver.Title);
                 Assert.AreEqual(creditApplyUrl, driver.Url);
+            }
+        }
+
+        [TestMethod]
+        public void BeInitiatedFromHomePage_RandomGreeting()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+                DemoHelper.Pause();
+
+                IWebElement randomGreetingApplyLink = driver.FindElement(By.PartialLinkText("- Apply Now!"));
+                randomGreetingApplyLink.Click();
+
+                DemoHelper.Pause();
+
+                Assert.AreEqual(driver.Url, creditApplyUrl);
+                Assert.AreEqual(driver.Title, creditCardTitle);
+            }
+        }
+
+        [TestMethod]
+        public void BeInitiatedFromHomePage_RandomGreeting_Using_XPATH()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+                DemoHelper.Pause();
+
+                IWebElement randomGreetingApplyLink = driver.FindElement(By.XPath("//a[text()[contains(.,'- Apply Now!')]]"));
+                randomGreetingApplyLink.Click();
+
+                DemoHelper.Pause();
+
+                Assert.AreEqual(driver.Url, creditApplyUrl);
+                Assert.AreEqual(driver.Title, creditCardTitle);
             }
         }
     }

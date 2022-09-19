@@ -100,6 +100,6 @@ namespace CreditCards.UITests
                
                 Assert.AreEqual(firstProduct, "Easy Credit Card");
             }
-        }
+        }        
     }
 }
