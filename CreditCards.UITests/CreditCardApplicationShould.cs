@@ -39,8 +39,33 @@ namespace CreditCards.UITests
             {
                 driver.Navigate().GoToUrl(homeUrl);
 
-                DemoHelper.Pause(11000);
+                IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
+                carouselNext.Click();
+                DemoHelper.Pause(1000);
                 IWebElement applyLink = driver.FindElement(By.LinkText("Easy: Apply Now!"));
+                applyLink.Click();
+
+                DemoHelper.Pause();
+
+                Assert.AreEqual(creditCardTitle, driver.Title);
+                Assert.AreEqual(creditApplyUrl, driver.Url);
+            }
+        }
+        [TestMethod]
+        public void BeInitiatedFromHomePage_CustomerService()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+
+                IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
+                carouselNext.Click();
+                DemoHelper.Pause(1000);
+
+                carouselNext.Click();
+                DemoHelper.Pause(1000);
+
+                IWebElement applyLink = driver.FindElement(By.ClassName("customer-service-apply-now"));
                 applyLink.Click();
 
                 DemoHelper.Pause();
