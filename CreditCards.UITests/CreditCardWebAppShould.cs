@@ -1,10 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ApprovalTests;
+using ApprovalTests.Reporters;
+using ApprovalTests.Reporters.Windows;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace CreditCards.UITests
 {
@@ -101,12 +105,12 @@ namespace CreditCards.UITests
                 DemoHelper.Pause();
 
                 ReadOnlyCollection<IWebElement> tableCells = driver.FindElements(By.TagName("td"));
-               
+
                 Assert.AreEqual(tableCells[0].Text, "Easy Credit Card");
                 Assert.AreEqual(tableCells[1].Text, "20% APR");
             }
-        }      
-        
+        }
+
         [TestMethod]
         public void OpenContactFooterInNewTab()
         {
@@ -176,6 +180,21 @@ namespace CreditCards.UITests
                 DemoHelper.Pause();
 
                 Assert.IsNotNull(driver.FindElement(By.Id("CookiesBeingUsed")));
+            }
+        }
+
+        [TestMethod]
+        [UseReporter(typeof(BeyondCompareReporter))]
+        public void RenderAboutPage()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeAboutUrl);
+                ITakesScreenshot screenshotDriver = (ITakesScreenshot)driver;
+                Screenshot screenshot = screenshotDriver.GetScreenshot();
+                screenshot.SaveAsFile("aboutpage.bmp", ScreenshotImageFormat.Bmp);
+                FileInfo file = new FileInfo("aboutpage.bmp");
+                Approvals.Verify(file);
             }
         }
     }
