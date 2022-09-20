@@ -10,6 +10,7 @@ namespace CreditCards.UITests
     {
         const string homeUrl = "http://localhost:44108/";
         const string homeAboutUrl = "http://localhost:44108/Home/About";
+        const string contactUrl = "http://localhost:44108/Home/Contact";
 
         const string homeTitle = "Home Page - Credit Cards";
 
@@ -101,6 +102,23 @@ namespace CreditCards.UITests
                 Assert.AreEqual(tableCells[0].Text, "Easy Credit Card");
                 Assert.AreEqual(tableCells[1].Text, "20% APR");
             }
-        }        
+        }      
+        
+        [TestMethod]
+        public void OpenContactFooterInNewTab()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+                driver.FindElement(By.Id("ContactFooter")).Click();
+                DemoHelper.Pause();
+                ReadOnlyCollection<string> allTabs = driver.WindowHandles;
+                string homeTab = allTabs[0];
+                string contactTab = allTabs[1];
+                driver.SwitchTo().Window(contactTab);
+                DemoHelper.Pause();
+                Assert.AreEqual(contactUrl, driver.Url);
+            }
+        }
     }
 }
