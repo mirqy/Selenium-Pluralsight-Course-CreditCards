@@ -155,5 +155,28 @@ namespace CreditCards.UITests
                 Assert.AreEqual(homeTitle, driver.Title);
             }
         }
+
+        [TestMethod]
+        public void NotDisplayCookieUseMessage()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+                driver.Manage().Cookies.AddCookie(new Cookie("acceptedCookies", "true"));
+                driver.Navigate().Refresh();
+                DemoHelper.Pause();
+                ReadOnlyCollection<IWebElement> msg = driver.FindElements(By.Id("CookiesBeingUsed"));
+                Assert.AreEqual(0, msg.Count);
+
+                Cookie cookieValue = driver.Manage().Cookies.GetCookieNamed("acceptedCookies");
+                Assert.AreEqual(cookieValue.Value, "true");
+
+                driver.Manage().Cookies.DeleteCookieNamed("acceptedCookies");
+                driver.Navigate().Refresh();
+                DemoHelper.Pause();
+
+                Assert.IsNotNull(driver.FindElement(By.Id("CookiesBeingUsed")));
+            }
+        }
     }
 }
