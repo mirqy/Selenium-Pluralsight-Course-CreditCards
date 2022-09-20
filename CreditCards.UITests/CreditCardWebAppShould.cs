@@ -1,6 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+using System;
 using System.Collections.ObjectModel;
 
 namespace CreditCards.UITests
@@ -118,6 +121,38 @@ namespace CreditCards.UITests
                 driver.SwitchTo().Window(contactTab);
                 DemoHelper.Pause();
                 Assert.AreEqual(contactUrl, driver.Url);
+            }
+        }
+
+        [TestMethod]
+        public void AlertIfLiveChatIsClosed()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+                driver.FindElement(By.Id("LiveChat")).Click();
+                IAlert alert = wait.Until(ExpectedConditions.AlertIsPresent());
+                Assert.AreEqual("Live chat is currently closed.", alert.Text);
+                DemoHelper.Pause();
+                alert.Accept();
+                DemoHelper.Pause();
+            }
+        }
+
+        [TestMethod]
+        public void NotNavigateToAboutUsWhenCancelClicked()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(homeUrl);
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+                driver.FindElement(By.Id("LearnAboutUs")).Click();
+                IAlert alert = wait.Until(ExpectedConditions.AlertIsPresent());
+                DemoHelper.Pause();
+                alert.Dismiss();
+                DemoHelper.Pause();
+                Assert.AreEqual(homeTitle, driver.Title);
             }
         }
     }
