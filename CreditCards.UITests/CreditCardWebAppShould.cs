@@ -1,6 +1,7 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
 using ApprovalTests.Reporters.Windows;
+using CreditCards.UITests.PageObjectModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -101,13 +102,14 @@ namespace CreditCards.UITests
         {
             using (IWebDriver driver = new ChromeDriver())
             {
-                driver.Navigate().GoToUrl(homeUrl);
+                var homePage = new HomePage(driver);
+                homePage.NavigateTo();
                 DemoHelper.Pause();
 
-                ReadOnlyCollection<IWebElement> tableCells = driver.FindElements(By.TagName("td"));
+                var products = homePage.Products;
 
-                Assert.AreEqual(tableCells[0].Text, "Easy Credit Card");
-                Assert.AreEqual(tableCells[1].Text, "20% APR");
+                Assert.AreEqual(products[0].name, "Easy Credit Card");
+                Assert.AreEqual(products[0].interest, "20% APR");
             }
         }
 
